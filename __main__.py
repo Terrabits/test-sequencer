@@ -1,7 +1,6 @@
-import csv
-from   random         import random
-from   test_sequencer import TestSequencer
-from   time           import sleep
+from random         import random
+from test_sequencer import TestSequencer
+from time           import sleep
 
 # aclr
 aclr_axes = {
