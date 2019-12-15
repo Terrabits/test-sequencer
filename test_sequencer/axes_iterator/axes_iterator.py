@@ -1,8 +1,8 @@
-from .index import Index
-from .point import Point
+from ..helpers import is_constant
+from .index    import Index
 
 class AxesIterator:
-    def __init__(self, **axes):
+    def __init__(self, axes):
         self.axes = axes
 
     @property
@@ -15,7 +15,14 @@ class AxesIterator:
 
     @property
     def axis_lengths(self):
-        return [len(values) for values in self.axes_values]
+        # TODO: handle str, other consts, iterables, indexables here
+        lengths = []
+        for values in self.axes_values:
+            if is_constant(values):
+                lengths.append(1)
+            else:
+                lengths.append(len(values))
+        return lengths
 
     @property
     def axis_names(self):
@@ -26,10 +33,17 @@ class AxesIterator:
         return list(self.axes.values())
 
     def point_at(self, index):
-        index_values = index.index_values if type(index) == Index else list(index)
-        point_values = [self.axes_values[pos][i] for pos, i in enumerate(index_values)]
-        value_dict   = dict(zip(self.axis_names, point_values))
-        return Point(**value_dict)
+        # TODO: handle str, other consts, iterables, indexables here
+        index_values = index.index_values if type(index) == Index else index
+        point_values = []
+        for pos, i in enumerate(index_values):
+            values = self.axes_values[pos]
+            if is_constant(values):
+                point_values.append(values)
+            else:
+                point_values.append(values[i])
+        point = dict(zip(self.axis_names, point_values))
+        return point
 
     def __iter__(self):
         index = Index(self.axis_lengths)

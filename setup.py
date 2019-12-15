@@ -14,8 +14,8 @@ setup(
     include_package_data=True,
     install_requires=[],
     extras_require={
-    'dev':  [],
-    'test': []
+    'dev':  ['ddt'],
+    'test': ['ddt']
     },
     license='MIT License',
     zip_safe=False,
