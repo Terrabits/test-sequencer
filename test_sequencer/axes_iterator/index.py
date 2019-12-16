@@ -20,15 +20,57 @@ class Index:
         return self.index_values == other_values
 
     @property
+    def is_empty(self):
+        return self.axis_count == 0
+
+    @property
     def is_last(self):
         return self == self.last
 
     def increment(self):
-        pos   = 0
-        carry = 1
-        while carry and pos < self.axis_count:
-            axis_length             = self.axis_lengths[pos]
-            self.index_values[pos] += carry
-            carry                   = self.index_values[pos] // axis_length
-            self.index_values[pos]  = self.index_values[pos]  % self.axis_lengths[pos]
-            pos += 1
+        if self.is_empty or self.is_last:
+            return
+
+        # copy the current index values
+        index_values = self.index_values.copy()
+
+        # seed carry with our increment
+        carry =  1
+
+        # For each position,
+        # starting with least significant bit (LSB)...
+        for pos in range(-1, -self.axis_count - 1, -1):
+            # break if no carry
+            # (nothing to do)
+            if not carry:
+                break
+
+            # get current value and add carry
+            index_value  = index_values[pos]
+            index_value += carry
+
+            # calculate the remainder
+            axis_length       = self.axis_lengths[pos]
+            index_values[pos] = index_value  % axis_length
+
+            # calculate carry to next position
+            carry             = index_value // axis_length
+
+        # set new index values
+        self.index_values = index_values
+
+    def to_list(self):
+        if self.is_empty:
+            return []
+
+        # take the first point
+        points = []
+        index  = Index(self.axis_lengths)
+        points.append(index.index_values)
+
+        # take each additional point
+        while not index.is_last:
+            index.increment()
+            points.append(index.index_values)
+
+        return points
