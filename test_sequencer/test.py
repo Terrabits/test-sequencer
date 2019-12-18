@@ -42,11 +42,11 @@ class Test:
             start_time = datetime.now()
             data_dict  = test_fn(point)
             stop_time  = datetime.now()
-            test_time  = stop_time - start_time
+            test_time  = (stop_time - start_time).total_seconds()
             results_dict = {
-                'start_time': start_time,
-                'stop_time': stop_time,
-                'test_time': test_time,
+                'start_time':  start_time,
+                'stop_time':   stop_time,
+                'test_time_s': test_time,
                 **point }
             results_dict .update(data_dict)
             results_dicts.append(results_dict)
