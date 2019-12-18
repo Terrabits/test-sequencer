@@ -17,7 +17,6 @@ class Test:
         return constant_inputs
 
     def execute_phase(self, phase):
-        print(f'starting {self.name} phase {phase}')
         phase = phase.strip().lower()
         if phase == 'begin_tests' and has_begin_tests(self.test_obj):
             self.test_obj.begin_tests(self.constant_inputs)

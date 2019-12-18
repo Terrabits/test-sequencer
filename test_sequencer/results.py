@@ -6,8 +6,12 @@ class Results:
         self.results_dicts = results_dicts
 
     @property
+    def is_empty(self):
+        return len(self.results_dicts) == 0
+
+    @property
     def headers(self):
-        if not self.results_dicts:
+        if self.is_empty:
             return []
         headers = []
         for key in self.results_dicts[0]:
@@ -37,9 +41,10 @@ class Results:
 
     def write_csv(self, filename):
         with open(filename, 'w') as f:
-            if not self.results_dicts:
-                # touch file and return
+            if self.is_empty:
+                # touch file and exit
                 return
+            # write results
             csv_writer = csv.writer(f)
             csv_writer.writerow(self.headers)
             for row in self.rows:
