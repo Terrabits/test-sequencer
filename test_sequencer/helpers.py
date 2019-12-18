@@ -22,4 +22,4 @@ def has_begin_tests(test_obj):
 def has_test(test_obj):
     return hasattr(test_obj, 'test')
 def has_end_tests(test_obj):
-    return hasattr(test_obj, 'begin_tests')
+    return hasattr(test_obj, 'end_tests')
