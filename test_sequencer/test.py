@@ -1,6 +1,7 @@
 from .axes_iterator import AxesIterator
 from .helpers       import has_begin_tests, has_end_tests, has_test, is_constant
 from .results       import Results
+from datetime       import datetime
 
 class Test:
     def __init__(self, name, test_obj, axes):
@@ -38,8 +39,15 @@ class Test:
 
         results_dicts = []
         for point in AxesIterator(self.axes):
-            results_dict = point.copy()
-            data_dict    = test_fn(point)
-            results_dict.update(data_dict)
+            start_time = datetime.now()
+            data_dict  = test_fn(point)
+            stop_time  = datetime.now()
+            test_time  = stop_time - start_time
+            results_dict = {
+                'start_time': start_time,
+                'stop_time': stop_time,
+                'test_time': test_time,
+                **point }
+            results_dict .update(data_dict)
             results_dicts.append(results_dict)
         return Results(results_dicts)
